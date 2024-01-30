@@ -38,7 +38,7 @@ class ParallelCoordinatePlot(html.Div):
         
         # Equivalent to `html.Div([...])`
         super().__init__(
-            className="graph_card",
+            className="parallel_coordinate_plot",
             children=[
                 html.H6(name),
                 html.Div(
@@ -71,3 +71,4 @@ class ParallelCoordinatePlot(html.Div):
         ))
 
         return self.fig
+    
