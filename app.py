@@ -1,6 +1,7 @@
 from jbi100_app.main import app
 from jbi100_app.data import get_data
 from jbi100_app.views.menu import make_menu_layout
+from jbi100_app.views.infoPlots import InfoPlots
 from jbi100_app.views.parallelCoordinatePlot import ParallelCoordinatePlot
 from jbi100_app.views.personalPlots import PersonalPlots
 from jbi100_app.views.sunburstPlot import SunburstPlot
@@ -91,6 +92,13 @@ if __name__ == '__main__':
         "Sunburst plot",
         df
     )
+    
+    # Info plot
+    infoPlots = InfoPlots(
+        "Information plots",
+        df
+    )
+    
     app.layout = html.Div(
         id="app-container",
         children=[
@@ -108,7 +116,8 @@ if __name__ == '__main__':
                 children=[
                     parallelCoordinatePlot,
                     personalPlots,
-                    sunburstPlot
+                    sunburstPlot,
+                    infoPlots
                 ],
             ),
         ],
@@ -147,7 +156,7 @@ if __name__ == '__main__':
             Input('graph-type-select', 'value')
         ]
     )
-    def update_personal_graphs(subgroup, segment, behavior, graph_type):
+    def update_personal_plots(subgroup, segment, behavior, graph_type):
         return personalPlots.update_plot(subgroup, segment, behavior, graph_type)
     
     # Callback for sunburst graph
@@ -158,8 +167,17 @@ if __name__ == '__main__':
             Input(component_id='behavioural_slct',  component_property='value'),
         ]
     )
-    def update_sunburst_graph(personal_slct, behavioural_slct):
+    def update_sunburst_plot(personal_slct, behavioural_slct):
         return sunburstPlot.update_plot(personal_slct, behavioural_slct)
+    
+    # Callback for updating the barchart
+    @app.callback(
+        Output(infoPlots.html_id, 'figure'),
+        [Input('category-dropdown', 'value')]
+    )
+    def update_info_plot(selected_category):
+        return infoPlots.update_plot(selected_category)
+    
     
     app.run_server(debug=False, dev_tools_ui=False)
     

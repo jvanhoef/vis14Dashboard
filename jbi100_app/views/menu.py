@@ -87,7 +87,16 @@ def generate_control_card():
                     {'label': 'Value size of payments', 'value': 'Behaviour_Value_Size'},
                 ],
                 value='delayed_payment_group',                   
-            )
+            ),
+            dcc.Dropdown(
+                id='category-dropdown',
+                options=[
+                    {'label': 'Annual Income Group', 'value': 'income'},
+                    {'label': 'Age Group', 'value': 'age'},
+                    {'label': 'Occupation', 'value': 'occupation'}
+                ],
+                value='income'  # default value
+            ),
         ], style={"textAlign": "float-left"}
     )
     
