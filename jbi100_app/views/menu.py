@@ -10,10 +10,10 @@ def generate_description_card():
     return html.Div(
         id="description-card",
         children=[
-            html.H5("Example dashboard"),
+            html.H5("Dashboard options"),
             html.Div(
                 id="intro",
-                children="You can use this as a basic template for your JBI100 visualization project.",
+                children="Here you can select different preferences and visualisations to learn more about how you can improve your credit score!.",
             ),
         ],
     )
@@ -27,18 +27,11 @@ def generate_control_card():
     return html.Div(
         id="control-card",
         children=[
-            html.Label("Color scatterplot 1"),
-            dcc.Dropdown(
-                id="select-color-scatter-1",
-                options=[{"label": i, "value": i} for i in color_list1],
-                value=color_list1[0],
-            ),
-            html.Br(),
-            html.Label("Color scatterplot 2"),
-            dcc.Dropdown(
-                id="select-color-scatter-2",
-                options=[{"label": i, "value": i} for i in color_list2],
-                value=color_list2[0],
+            html.Label("Colorblind friendly colors"),
+            dcc.Checklist(
+                id='colorblind-checkbox',
+                options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
+                value=[]
             ),
         ], style={"textAlign": "float-left"}
     )

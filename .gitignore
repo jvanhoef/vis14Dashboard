@@ -209,3 +209,5 @@ Temporary Items
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+
+cleaned_data.csv
