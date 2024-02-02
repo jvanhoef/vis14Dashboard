@@ -24,14 +24,14 @@ if __name__ == '__main__':
     else:
         df = get_data()
     
-    #personal options:
+    # Define the age and income groups
     age_groups = {
-    '0-17': (0, 17),
-    '18-24': (18, 24),
-    '25-34': (25, 34),
-    '35-44': (35, 44),
-    '45-54': (45, 54),
-    '55+': (55, df['Age'].max()),
+        '0-17': (0, 17),
+        '18-24': (18, 24),
+        '25-34': (25, 34),
+        '35-44': (35, 44),
+        '45-54': (45, 54),
+        '55+': (55, df['Age'].max()),
     }
 
     income_groups = {
@@ -63,6 +63,13 @@ if __name__ == '__main__':
         'Developer': 'Developer', 
         'Musician': 'Musician'
     }
+
+    x_labels ={'Payment_of_Min_Amount': 'Payment of Minimum Amount',
+                'Behaviour_Spending_Level': 'Behaviour Spending Level',
+                'Payment_Behaviour': 'Payment Behaviour',
+                'Num_Credit_Card': 'Number of creditcards',
+                'Num_Bank_Accounts': 'Number of bank accounts'}
+    
     # Instantiate plots
     # Parallel coordinate plot:
     dimensions=[
@@ -134,9 +141,17 @@ if __name__ == '__main__':
                 id="sunburst-plot",
                 children=[
                     html.H1('Sunburst and Personal Plots Page'),
-                    #sunburstPlot,
-                ]
-            , style={'width': '50%', 'display': 'inline-block'}),
+                    html.Div(
+                        id="sunburst-plot",
+                        children=[
+                            sunburstPlot,
+                        ], style={'width': '50%', 'display': 'inline-block'}),
+                    html.Div(
+                        id="personal-plot",
+                        children=[
+                            personalPlots,
+                        ], style={'width': '50%', 'display': 'inline-block'})
+                    ]),
                 # Replace with the actual content for the sunburst_personal page
         elif pathname == '/info_plots':
             return html.Div(

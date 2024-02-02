@@ -53,15 +53,21 @@ class ParallelCoordinatePlot(html.Div):
         credit_categories = ['Poor', 'Standard', 'Good']
         
         color_scale = px.colors.sequential.Cividis if 'CB' in colorblind_friendly else px.colors.diverging.Tealrose
+        
+        dimensions=['Annual_Income', 'Num_of_Loan', 'Credit_Utilization_Ratio', 'Num_of_Delayed_Payment', 'Outstanding_Debt', 'Interest_Rate', 'Delay_from_due_date', 'credit_score_mapped' ]
+
+        # Create a dictionary mapping old labels to new labels
+        labels = {dim: dim.replace('_', ' ') for dim in dimensions}
+        labels['credit_score_mapped'] = 'Credit Score'  # Special case
 
         self.fig = px.parallel_coordinates(
             self.df,
             color='credit_score_mapped',
-            dimensions=['Annual_Income', 'Amount_invested_monthly', 'Credit_Utilization_Ratio', 'Num_of_Delayed_Payment', 'Num_of_Delayed_Payment', 'Outstanding_Debt', 'credit_score_mapped' ],
+            dimensions=dimensions,
             color_continuous_scale=color_scale,
             color_continuous_midpoint=1,
             range_color=[0, 2], # Set the color map to go from 0 to 2
-            labels={'credit_score_mapped': 'Credit Score'}
+            labels=labels
         )  
 
         # Update color bar ticks to category labels

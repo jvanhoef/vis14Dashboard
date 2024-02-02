@@ -36,20 +36,47 @@ def generate_control_card():
                 options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
                 value=[]
             ),
-                dcc.Dropdown(
-                id='subgroup-select',
-                options=[
-                    {'label': 'Age', 'value': 'Age'},
-                    {'label': 'Income', 'value': 'Income'},
-                    {'label': 'Occupation', 'value': 'Occupation'}
-                    # Add other subgroups as needed
-                ],
-                value='Age'  # Default value
-            ),
-            dcc.Dropdown(
-                id='segment-select',
-                # Options will be set based on the callback
-            ),
+            html.Div([
+                "Age Range:",
+                dcc.RangeSlider(
+                    id='age-slider',
+                    min=data['Age'].min(),
+                    max=data['Age'].max(),
+                    step=1,
+                    value=[data['Age'].min(), data['Age'].max()],
+                    marks={i: str(i) for i in range(15, 55 + 1, 5)}
+                ),
+            ], style={'padding': 20}),
+
+            html.Div([
+                "Income Range:",
+                dcc.RangeSlider(
+                    id='income-slider',
+                    min=data['Annual_Income'].min(),
+                    max=data['Annual_Income'].max(),
+                    step=1000,
+                    value=[data['Annual_Income'].min(), data['Annual_Income'].max()],
+                    marks={
+                        0: '${:,.0f}'.format(0),
+                        30000: '${:,.0f}'.format(30000),
+                        60000: '${:,.0f}'.format(60000),
+                        90000: '${:,.0f}'.format(90000),
+                        120000: '${:,.0f}'.format(120000),
+                        150000: '${:,.0f}'.format(150000),
+                        180000: '${:,.0f}'.format(180000)
+                    }                ),
+            ], style={'padding': 20}),
+
+            html.Div([
+                "Occupation:",
+                dcc.Checklist(
+                    id='occupation-checklist',
+                    options=[{'label': i, 'value': i} for i in data['Occupation'].unique()],
+                    value=data['Occupation'].unique().tolist(),
+                    inline=True
+                ),
+            ], style={'padding': 20}),
+
             dcc.Dropdown(
                 id='behavior-select',
                 options=[
@@ -58,44 +85,8 @@ def generate_control_card():
                     {'label': 'Payment Behaviour', 'value': 'Payment_Behaviour'},
                     {'label': 'Number of creditcards', 'value': 'Num_Credit_Card'},
                     {'label': 'Number of bank accounts', 'value': 'Num_Bank_Accounts'}
-                    # Add other behaviors as needed
                 ],
-                value='Payment_of_Min_Amount'  # Default value
-            ),
-            dcc.Dropdown(
-                id='graph-type-select',
-                options=[
-                    {'label': 'Bar Chart', 'value': 'bar'},
-                    {'label': 'Box Plot', 'value': 'box'},
-                    {'label': 'Heatmap', 'value': 'heatmap'}
-                ],
-                value='bar'  # Default graph type
-            ),
-            dcc.Dropdown(id='personal_slct',
-                options=[
-                    {'label': 'Age', 'value': 'Age_Group'},
-                    {'label': 'Occupation', 'value': 'Occupation'},
-                    {'label': 'Income group', 'value': 'Income_Group'},
-                ],
-                value='Age_Group', # Default value                                        
-            ), 
-            dcc.Dropdown(
-                id='behavioural_slct',
-                options=[
-                    {'label': 'Number of delayed payments', 'value': 'delayed_payment_group'},
-                    {'label': 'Spending level', 'value': 'Behaviour_Spending_Level'},
-                    {'label': 'Value size of payments', 'value': 'Behaviour_Value_Size'},
-                ],
-                value='delayed_payment_group',                   
-            ),
-            dcc.Dropdown(
-                id='category-dropdown',
-                options=[
-                    {'label': 'Annual Income Group', 'value': 'income'},
-                    {'label': 'Age Group', 'value': 'age'},
-                    {'label': 'Occupation', 'value': 'occupation'}
-                ],
-                value='income'  # default value
+                value='Num_Credit_Card'
             ),
         ], style={"textAlign": "float-left"}
     )
