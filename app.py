@@ -157,30 +157,14 @@ if __name__ == '__main__':
     
     #callback for personal plots
     @app.callback(
-        Output(personalPlots.html_id, 'figure', allow_duplicate=True),
+        Output(personalPlots.html_id, 'figure'),
         [Input('age-slider', 'value'),
         Input('income-slider', 'value'),
         Input('occupation-checklist', 'value'),
-        Input('behavior-select', 'value'),
-        Input(sunburstPlot.html_id, 'clickData')],
-        prevent_initial_call='initial_duplicate'
+        Input('behavior-select', 'value')]
     )
-    def update_personal_plots(age_range, income_range, occupations, behavior, clickData):
-        ctx = dash.callback_context
-
-        if not ctx.triggered:
-            # No input has been triggered yet, so we don't update the figure.
-            raise dash.exceptions.PreventUpdate
-        else:
-            trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
-
-            if trigger_id == sunburstPlot.html_id and clickData is not None and clickData['points'][0]['label'].startswith('Age'):
-                # Update the figure based on sunburst-graph clickData.
-                selected_age_bin = clickData['points'][0]['label']
-                return personalPlots.update_age(selected_age_bin)
-            else:
-                # Update the figure based on other inputs.
-                return personalPlots.update_plot(age_range, income_range, occupations, behavior)
+    def update_personal_plots(age_range, income_range, occupations, behavior):
+        return personalPlots.update_plot(age_range, income_range, occupations, behavior)
     
     # Callback for sunburst graph
     @app.callback(
