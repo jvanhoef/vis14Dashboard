@@ -24,46 +24,6 @@ if __name__ == '__main__':
     else:
         df = get_data()
     
-    # Define the age and income groups
-    age_groups = {
-        '0-17': (0, 17),
-        '18-24': (18, 24),
-        '25-34': (25, 34),
-        '35-44': (35, 44),
-        '45-54': (45, 54),
-        '55+': (55, df['Age'].max()),
-    }
-
-    income_groups = {
-        '0-20k': (0, 20000),
-        '20k-40k': (20000, 40000),
-        '40k-60k': (40000, 60000),
-        '60k-80k': (60000, 80000),    
-        '80k-100k': (80000, 100000),
-        '100k-120k': (100000, 120000),
-        '120k-140k': (120000, 140000),
-        '140k-160k': (140000, 160000),
-        '160k+': (160000, df['Annual_Income'].max()),
-    }
-
-    occupation_groups = {
-        'Lawyer': 'Lawyer', 
-        'Mechanic': 'Mechanic', 
-        'Media_Manager': 'Media_Manager', 
-        'Doctor': 'Doctor', 
-        'Journalist': 'Journalist',
-        'Accountant': 'Accountant', 
-        'Manager': 'Manager', 
-        'Entrepreneur': 'Entrepreneur', 
-        'Scientist': 'Scientist', 
-        'Architect': 'Architect',
-        'Teacher': 'Teacher', 
-        'Engineer': 'Engineer', 
-        'Writer': 'Writer', 
-        'Developer': 'Developer', 
-        'Musician': 'Musician'
-    }
-
     x_labels ={'Payment_of_Min_Amount': 'Payment of Minimum Amount',
                 'Behaviour_Spending_Level': 'Behaviour Spending Level',
                 'Payment_Behaviour': 'Payment Behaviour',
@@ -90,9 +50,7 @@ if __name__ == '__main__':
     # Personal plots
     personalPlots = PersonalPlots(
         "Personal plots",
-        age_groups,
-        income_groups,
-        occupation_groups,
+        x_labels,
         df
     )
     
@@ -192,44 +150,6 @@ if __name__ == '__main__':
                     )
                 ], style={'textAlign': 'center'})
             ])
-    
-    #The layout for the sunburst and personal plot page
-    def sunburst_and_personal_plots_page():
-        return html.Div([
-            html.Div(
-                id="sunburst-plot",
-                children=[
-                    sunburstPlot,
-                ]
-            , style={'width': '50%', 'display': 'inline-block'}),
-
-            html.Div(
-                id="personal-plot",
-                children=[
-                    personalPlots,
-                ]
-            , style={'width': '50%', 'display': 'inline-block'})
-        ])
-        
-    def info_plots_page():
-        return html.Div([
-            html.Div(
-                id="info-plot",
-                children=[
-                    infoPlots
-                ]
-            , style={'width': '100%', 'display': 'inline-block'})
-        ])
-
-    # @app.callback(Output('app-container', 'children'),
-    #             [Input('url', 'pathname')])
-    # def display_page(pathname):
-    #     if pathname == '/sunburst_personal':
-    #         return sunburst_and_personal_plots_page()
-    #     elif pathname == '/info_plots':
-    #         return info_plots_page()
-    #     else:
-    #         return "404 Page Error! Please choose a link"
 
     # Callbacks to set colorblindness checks
     @app.callback(
@@ -239,33 +159,44 @@ if __name__ == '__main__':
     def update_parallel_coordinates_plot(colorblind_friendly):
         return parallelCoordinatePlot.update_plot(colorblind_friendly)
     
-    @app.callback(
-        Output('segment-select', 'options'),
-        Input('subgroup-select', 'value')
-    )
-    # Callback to set segment options based on the selected subgroup
-    def set_segment_options(selected_subgroup):
-        if selected_subgroup == 'Age':
-            return [{'label': label, 'value': label} for label in age_groups.keys()]
-        elif selected_subgroup == 'Income':
-            return [{'label': label, 'value': label} for label in income_groups.keys()]
-        elif selected_subgroup == 'Occupation':
-            return [{'label': label, 'value': label} for label in occupation_groups.keys()]
-        else:
-            return []
-        
-    # Callbacks to set selection for personal plots
+    #updates for personal plots
     @app.callback(
         Output(personalPlots.html_id, 'figure'),
-        [
-            Input('subgroup-select', 'value'),
-            Input('segment-select', 'value'),
-            Input('behavior-select', 'value'),
-            Input('graph-type-select', 'value')
-        ]
+        [Input('age-slider', 'value'),
+        Input('income-slider', 'value'),
+        Input('occupation-checklist', 'value'),
+        Input('behavior-select', 'value'),]
     )
-    def update_personal_plots(subgroup, segment, behavior, graph_type):
-        return personalPlots.update_plot(subgroup, segment, behavior, graph_type)
+    def update_personal_plots(age_range, income_range, occupations, behavior):
+        return personalPlots.update_plot(age_range, income_range, occupations, behavior)        
+    
+    # @app.callback(
+    #     Output('segment-select', 'options'),
+    #     Input('subgroup-select', 'value')
+    # )
+    # # Callback to set segment options based on the selected subgroup
+    # def set_segment_options(selected_subgroup):
+    #     if selected_subgroup == 'Age':
+    #         return [{'label': label, 'value': label} for label in age_groups.keys()]
+    #     elif selected_subgroup == 'Income':
+    #         return [{'label': label, 'value': label} for label in income_groups.keys()]
+    #     elif selected_subgroup == 'Occupation':
+    #         return [{'label': label, 'value': label} for label in occupation_groups.keys()]
+    #     else:
+    #         return []
+        
+    # # Callbacks to set selection for personal plots
+    # @app.callback(
+    #     Output(personalPlots.html_id, 'figure'),
+    #     [
+    #         Input('subgroup-select', 'value'),
+    #         Input('segment-select', 'value'),
+    #         Input('behavior-select', 'value'),
+    #         Input('graph-type-select', 'value')
+    #     ]
+    # )
+    # def update_personal_plots(subgroup, segment, behavior, graph_type):
+    #     return personalPlots.update_plot(subgroup, segment, behavior, graph_type)
     
     # Callback for sunburst graph
     @app.callback(

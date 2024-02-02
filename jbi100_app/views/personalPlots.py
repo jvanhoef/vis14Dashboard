@@ -3,12 +3,10 @@ import pandas as pd
 import plotly.express as px
 
 class PersonalPlots(html.Div):
-    def __init__(self, name, age_groups, income_groups, occupation_groups, df):
+    def __init__(self, name, x_labels, df):
         self.html_id = name.lower().replace(" ", "-")
         self.df = df
-        self.age_groups = age_groups
-        self.income_groups = income_groups
-        self.occupation_groups = occupation_groups
+        self.x_labels = x_labels
                 
         # Equivalent to `html.Div([...])`
         super().__init__(
@@ -20,67 +18,37 @@ class PersonalPlots(html.Div):
         )
         
     # Callback to update the bar plot based on the selected options
-    def update_plot(self, subgroup, segment, behavior, graph_type):
-        if graph_type == 'heatmap':
-            # Binning and then converting intervals to strings for JSON serialization
-            if subgroup == 'Age':
-                bins = pd.IntervalIndex.from_tuples(list(self.age_groups.values()))
-                age_bins = pd.cut(self.df['Age'], bins=bins)
-                self.df['Age_Bin'] = age_bins.apply(lambda x: f'{x.left}-{x.right}')
-                pivot_column = 'Age_Bin'
-            elif subgroup == 'Income':
-                bins = pd.IntervalIndex.from_tuples(list(self.income_groups.values()))
-                income_bins = pd.cut(self.df['Annual_Income'], bins=bins)
-                self.df['Income_Bin'] = income_bins.apply(lambda x: f'{x.left}-{x.right}')
-                pivot_column = 'Income_Bin'
-            elif subgroup == 'Occupation':
-                pivot_column = 'Occupation'
-            
-            # Group by the pivot column and credit score to get the count
-            heatmap_data = self.df.groupby([pivot_column, 'Credit_Score']).size().unstack(fill_value=0)
-
-            # heatmap_data = heatmap_data[]
-
-            # Ensure all expected credit score categories are present
-            heatmap_data = heatmap_data.reindex(['Good', 'Standard', 'Poor'], axis=1, fill_value=0)
-
-            # Use imshow from plotly express to generate the heatmap
-            self.fig = px.imshow(heatmap_data, aspect='auto', 
-                            color_continuous_scale='Viridis')  # Or any other color scale you prefer
-
-            # Update layout to have more meaningful axis titles
-            self.fig.update_layout(
-                xaxis_title="Credit Score",
-                yaxis_title=subgroup,
-                yaxis=dict(type='category'),
-                xaxis=dict(type='category')
-            )
-            self.fig.update_xaxes(side="bottom")
-            return self.fig
-
-        if subgroup == 'Age':
-            age_range = self.age_groups.get(segment, (0, 0))
-            filtered_data = self.df[(self.df['Age'] >= age_range[0]) & (self.df['Age'] <= age_range[1])]
-        elif subgroup == 'Income':
-            income_range = self.income_groups.get(segment, (0, 0))
-            filtered_data = self.df[(self.df['Annual_Income'] >= income_range[0]) & (self.df['Annual_Income'] <= income_range[1])]
-        elif subgroup == 'Occupation':
-            occupation = self.occupation_groups.get(segment)
-            filtered_data = self.df[(self.df['Occupation'] == occupation)]
-        else:
-            filtered_data = self.df
+    def update_plot(self, age_range, income_range, occupations, behavior):
+        # Filter data based on inputs
+        filtered_data = self.df[
+            (self.df['Age'] >= age_range[0]) & (self.df['Age'] <= age_range[1]) &
+            (self.df['Annual_Income'] >= income_range[0]) & (self.df['Annual_Income'] <= income_range[1]) &
+            (self.df['Occupation'].isin(occupations))
+        ]
 
         # Define custom colors for clarity
-        custom_colors = ['#2ca02c', '#fa9c1b', '#d62728'] # Green for Good, Blue for Standard, Red for Poor
+        custom_colors = ['#2ca02c', '#d62728'] # Green for Good, Blue for Standard, Red for Poor
 
-        # Specify the order of the categories
-        category_order = {'Credit_Score': ['Good', 'Standard', 'Poor']}
+        filtered_data = filtered_data[filtered_data[behavior] != "Not available"]
+        filtered_data['Good_Standard'] = filtered_data['Credit_Score'].apply(lambda x: 'Good_Standard' if x in ['Good', 'Standard'] else 'Poor')
+        counts = filtered_data.groupby([behavior, 'Good_Standard']).size().reset_index(name='counts')
 
-        if graph_type == 'bar':
-            filtered_data = filtered_data[filtered_data[behavior] != "Not available"]
-            self.fig = px.histogram(filtered_data, x=behavior, color='Credit_Score', color_discrete_sequence=custom_colors, category_orders=category_order)
-        elif graph_type == 'box':
-            self.fig = px.box(filtered_data, x=behavior, y='Credit_Score', color='Credit_Score', color_discrete_sequence=custom_colors, category_orders=category_order)
-        
+        # Pivot the data to have 'Good_Standard' and 'Poor' side by side
+        pivot_data = counts.pivot(index=behavior, columns='Good_Standard', values='counts').fillna(0)
+
+        # Normalize the counts to show proportions
+        pivot_data['total'] = pivot_data.sum(axis=1)
+        for col in pivot_data.columns[:-1]:  # Exclude the total column
+            pivot_data[col] = pivot_data[col] / pivot_data['total']
+
+        # Reset index to make 'behavior' a column again for plotting
+        pivot_data.reset_index(inplace=True)
+
+        # Plotting with normalized counts
+        self.fig = px.bar(pivot_data, x=behavior, y=['Good_Standard', 'Poor'], title=f"Good+Standard to Poor Ratio by {self.x_labels[behavior]}",
+                        labels={'value': 'Normalized Credit Score', behavior:  self.x_labels[behavior]}, 
+                        color_discrete_sequence=custom_colors)
+
+        self.fig.update_layout(barmode='stack', xaxis={'categoryorder':'total descending'})
         return self.fig
-    
+        
