@@ -139,44 +139,32 @@ if __name__ == '__main__':
     def update_parallel_coordinates_plot(colorblind_friendly):
         return parallelCoordinatePlot.update_plot(colorblind_friendly)
     
-    #updates for personal plots
+    #callback for personal plots
     @app.callback(
-        Output(personalPlots.html_id, 'figure'),
+        Output(personalPlots.html_id, 'figure', allow_duplicate=True),
         [Input('age-slider', 'value'),
         Input('income-slider', 'value'),
         Input('occupation-checklist', 'value'),
-        Input('behavior-select', 'value'),]
+        Input('behavior-select', 'value'),
+        Input(sunburstPlot.html_id, 'clickData')],
+        prevent_initial_call='initial_duplicate'
     )
-    def update_personal_plots(age_range, income_range, occupations, behavior):
-        return personalPlots.update_plot(age_range, income_range, occupations, behavior)        
-    
-    # @app.callback(
-    #     Output('segment-select', 'options'),
-    #     Input('subgroup-select', 'value')
-    # )
-    # # Callback to set segment options based on the selected subgroup
-    # def set_segment_options(selected_subgroup):
-    #     if selected_subgroup == 'Age':
-    #         return [{'label': label, 'value': label} for label in age_groups.keys()]
-    #     elif selected_subgroup == 'Income':
-    #         return [{'label': label, 'value': label} for label in income_groups.keys()]
-    #     elif selected_subgroup == 'Occupation':
-    #         return [{'label': label, 'value': label} for label in occupation_groups.keys()]
-    #     else:
-    #         return []
-        
-    # # Callbacks to set selection for personal plots
-    # @app.callback(
-    #     Output(personalPlots.html_id, 'figure'),
-    #     [
-    #         Input('subgroup-select', 'value'),
-    #         Input('segment-select', 'value'),
-    #         Input('behavior-select', 'value'),
-    #         Input('graph-type-select', 'value')
-    #     ]
-    # )
-    # def update_personal_plots(subgroup, segment, behavior, graph_type):
-    #     return personalPlots.update_plot(subgroup, segment, behavior, graph_type)
+    def update_personal_plots(age_range, income_range, occupations, behavior, clickData):
+        ctx = dash.callback_context
+
+        if not ctx.triggered:
+            # No input has been triggered yet, so we don't update the figure.
+            raise dash.exceptions.PreventUpdate
+        else:
+            trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+            if trigger_id == sunburstPlot.html_id and clickData is not None and clickData['points'][0]['label'].startswith('Age'):
+                # Update the figure based on sunburst-graph clickData.
+                selected_age_bin = clickData['points'][0]['label']
+                return personalPlots.update_age(selected_age_bin)
+            else:
+                # Update the figure based on other inputs.
+                return personalPlots.update_plot(age_range, income_range, occupations, behavior)
     
     # Callback for sunburst graph
     @app.callback(
