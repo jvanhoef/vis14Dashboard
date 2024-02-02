@@ -6,7 +6,9 @@ from jbi100_app.views.parallelCoordinatePlot import ParallelCoordinatePlot
 from jbi100_app.views.personalPlots import PersonalPlots
 from jbi100_app.views.sunburstPlot import SunburstPlot
 
+import dash
 from dash import html
+from dash import dcc
 import plotly.express as px
 from dash.dependencies import Input, Output
 import os
@@ -100,6 +102,7 @@ if __name__ == '__main__':
     )
     
     app.layout = html.Div(
+        #dcc.Location(id='url', refresh=False),
         id="app-container",
         children=[
             # Left column
@@ -115,14 +118,75 @@ if __name__ == '__main__':
                 className="nine columns",
                 children=[
                     parallelCoordinatePlot,
-                    personalPlots,
-                    sunburstPlot,
-                    infoPlots
-                ],
-            ),
+                    html.Div([
+                        dcc.Link(
+                            'Sunburst and Personal Plots',
+                            href='/sunburst_personal',
+                            refresh=True,
+                            style={
+                                'marginRight': '10px',
+                                'padding': '10px',
+                                'backgroundColor': '#f0f0f0',
+                                'border': '1px solid #000',
+                                'display': 'inline-block'
+                            }
+                        ),
+                        dcc.Link(
+                            'Info Plots',
+                            href='/info_plots',
+                            refresh=True,
+                            style={
+                                'marginLeft': '10px',
+                                'padding': '10px',
+                                'backgroundColor': '#f0f0f0',
+                                'border': '1px solid #000',
+                                'display': 'inline-block'
+                            }
+                        )
+                    ], style={'textAlign': 'center'})
+                ]
+            )
         ],
     )
     
+    #The layout for the sunburst and personal plot page
+    def sunburst_and_personal_plots_page():
+        return html.Div([
+            html.Div(
+                id="sunburst-plot",
+                children=[
+                    sunburstPlot,
+                ]
+            , style={'width': '50%', 'display': 'inline-block'}),
+
+            html.Div(
+                id="personal-plot",
+                children=[
+                    personalPlots,
+                ]
+            , style={'width': '50%', 'display': 'inline-block'})
+        ])
+        
+    def info_plots_page():
+        return html.Div([
+            html.Div(
+                id="info-plot",
+                children=[
+                    infoPlots
+                ]
+            , style={'width': '100%', 'display': 'inline-block'})
+        ])
+
+    @app.callback(Output('app-container', 'children'),
+                [Input('url', 'pathname')])
+    def display_page(pathname):
+        if pathname == '/sunburst_personal':
+            return sunburst_and_personal_plots_page()
+        elif pathname == '/info_plots':
+            return info_plots_page()
+        else:
+            return "404 Page Error! Please choose a link"
+
     # Callbacks to set colorblindness checks
     @app.callback(
         Output(parallelCoordinatePlot.html_id, "figure"), 
@@ -179,5 +243,5 @@ if __name__ == '__main__':
         return infoPlots.update_plot(selected_category)
     
     
-    app.run_server(debug=False, dev_tools_ui=False)
+    app.run_server(debug=False, dev_tools_ui=False, port=8051)
     
