@@ -76,7 +76,6 @@ if __name__ == '__main__':
                     html.Div(
                         id="left-column",
                         className="three columns",
-                        children=make_menu_layout()
                     ),
 
                     # Right column
@@ -88,6 +87,13 @@ if __name__ == '__main__':
             ),
         ]
     )
+    
+    @app.callback(
+        Output('left-column', 'children'),
+        [Input('url', 'pathname')]
+    )
+    def update_left_column(pathname):
+        return make_menu_layout(pathname)
 
     @app.callback(
         Output('right-column', 'children'),
@@ -122,33 +128,7 @@ if __name__ == '__main__':
             , )
         else:
             return html.Div([
-                parallelCoordinatePlot,
-                html.Div([
-                    dcc.Link(
-                        'Sunburst and Personal Plots',
-                        href='/sunburst_personal',
-                        refresh=True,
-                        style={
-                            'marginRight': '10px',
-                            'padding': '10px',
-                            'backgroundColor': '#f0f0f0',
-                            'border': '1px solid #000',
-                            'display': 'inline-block'
-                        }
-                    ),
-                    dcc.Link(
-                        'Info Plots',
-                        href='/info_plots',
-                        refresh=True,
-                        style={
-                            'marginLeft': '10px',
-                            'padding': '10px',
-                            'backgroundColor': '#f0f0f0',
-                            'border': '1px solid #000',
-                            'display': 'inline-block'
-                        }
-                    )
-                ], style={'textAlign': 'center'})
+                parallelCoordinatePlot
             ])
 
     # Callbacks to set colorblindness checks
