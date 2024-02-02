@@ -107,6 +107,10 @@ def generate_control_personal():
                 options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
                 value=[]
             ),
+            html.Div(
+                id="intro-personal",
+                children="Personal plot selections:",
+            ),
             html.Div([
                 "Age Range:",
                 dcc.RangeSlider(
@@ -159,6 +163,38 @@ def generate_control_personal():
                 ],
                 value='Num_Credit_Card'
             ),
+            html.Div(
+                id="intro-personal",
+                children="Sunburst selections:",
+            ),
+            dcc.Dropdown(id='personal_slct',
+                options=[
+                        {'label': 'Age', 'value': 'Age_Group'},
+                        {'label': 'Occupation', 'value': 'Occupation'},
+                        {'label': 'Income group', 'value': 'Income_Group'},
+                ],
+                optionHeight=35,                   
+                value='Age_Group',                                    
+                placeholder='Personal variable',     
+                clearable=True,                   
+                style={'width':"100%"},             
+            
+                ),                                  
+
+            ## behavioural dropdown
+            dcc.Dropdown(id='behavioural_slct',
+                options=[
+                        {'label': 'Number of delayed payments', 'value': 'delayed_payment_group'},
+                        {'label': 'Spending level', 'value': 'Behaviour_Spending_Level'},
+                        {'label': 'Value size of payments', 'value': 'Behaviour_Value_Size'},
+                ],
+                optionHeight=35,                    
+                value='delayed_payment_group',                               
+                placeholder='Behavioural variable',     
+                clearable=True,                    
+                style={'width':"100%"},            
+                
+            ), 
             html.Div(
                 dcc.Link(
                     'Home',
