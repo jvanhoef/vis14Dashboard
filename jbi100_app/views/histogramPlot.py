@@ -5,8 +5,34 @@ import plotly.express as px
 class HistogramPlot(html.Div):
     def __init__(self, name, df):
         self.html_id = name.lower().replace(" ", "-")
-        self.df = df
+        
+        df = df.copy()
 
+        # Create a function to categorize the change
+        def credit_score_change(row):
+            if row['Credit_Score'] == row['Previous_Score']:
+                return 'No Change'
+            elif row['Credit_Score'] == 'Poor' and row['Previous_Score'] == 'Standard':
+                return 'Decline'
+            elif row['Credit_Score'] == 'Poor' and row['Previous_Score'] == 'Good':
+                return 'Decline'
+            elif row['Credit_Score'] == 'Standard' and row['Previous_Score'] == 'Good':
+                return 'Decline'
+            elif row['Credit_Score'] == 'Good' and row['Previous_Score'] == 'Poor':
+                return 'Improvement'
+            elif row['Credit_Score'] == 'Good' and row['Previous_Score'] == 'Standard':
+                return 'Improvement'
+            elif row['Credit_Score'] == 'Standard' and row['Previous_Score'] == 'Poor':
+                return 'Improvement'
+            else:
+                return 'No Change'
+
+        # Create a shifted version of the credit score column
+        df['Previous_Score'] = df.groupby('Customer_ID')['Credit_Score'].shift(1)
+
+        # Apply the function to categorize each change
+        df['Credit_Score_Change'] = df.apply(credit_score_change, axis=1)
+        
         # new dataframe column for change in credit score
         customer_credit_change = df.groupby('Customer_ID')['Credit_Score_Change'].value_counts().unstack(fill_value=0)
         customer_credit_change['Numeric_Credit_Change'] = customer_credit_change['Improvement'] - customer_credit_change['Decline']

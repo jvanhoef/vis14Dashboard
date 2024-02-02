@@ -2,6 +2,7 @@ from dash import dcc, html
 import pandas as pd
 import plotly.graph_objs as go
 import numpy as np
+import plotly.express as px
 
 class InfoPlots(html.Div):
     def __init__(self, name, df):
@@ -36,7 +37,8 @@ class InfoPlots(html.Div):
                 html.H6(name),
                 dcc.Graph(id=self.html_id + '-income', figure=income_plot),
                 dcc.Graph(id=self.html_id + '-age', figure=age_plot),
-                dcc.Graph(id=self.html_id + '-occupation', figure=occupation_plot)
+                dcc.Graph(id=self.html_id + '-occupation', figure=occupation_plot),
+                dcc.Link('Return to Home', href='/')
             ],
         )
     
