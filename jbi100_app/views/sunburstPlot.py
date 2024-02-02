@@ -19,7 +19,7 @@ class SunburstPlot(html.Div):
         #Making bins for annual income
         income_bins =[0,21000,35000,49000,73000,100000,190000]
         income_labels = ['0k-21k', '22k-34k', '35k-48k', '49k-72k', '73k-100k', '100k+']
-        df['Income_Group'] = pd.cut(df['Annual_Income'], bins=income_bins, labels=income_labels, right=False)
+        df['Income_Group'] = pd.cut(df['Annual_Income'], bins=income_bins, labels=income_labels, right=False, ordered=False)
 
 
         # #Making bins for number of delayed payments
@@ -62,6 +62,7 @@ class SunburstPlot(html.Div):
         )
         ## choose what text on traces
         self.fig.update_traces(textinfo='label+percent parent', hovertemplate='%{label}')
+        self.fig.update_traces(sort=False, selector=dict(type='sunburst')) 
 
         ## Layout titles  
         self.fig.update_layout(title_text = "Sunburst graph of personal groups and behavioral variables selected in the dropdown.",coloraxis_colorbar_title='Credit Score', margin=dict(t=0, l=0, r=0, b=0))
