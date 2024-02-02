@@ -51,23 +51,24 @@ class HistogramPlot(html.Div):
 
         self.numeric_change_df = numeric_change_df
                 
-        # Equivalent to `html.Div([...])`
+        # Generate the plot immediately after preparing the data
+        fig = self.create_plot(self.numeric_change_df)  # Call the method to create the plot figure based on the prepared DataFrame
+
+        # Use the generated figure directly in the dcc.Graph component
         super().__init__(
             className="graph_card",
             children=[
                 html.H6(name),
-                dcc.Graph(id=self.html_id)
+                dcc.Graph(id=self.html_id, figure=fig)  # Include the figure directly here
             ],
         )
-        
-    # Callback to update the bar plot based on the selected options
-    def update_plot(self):
+
+    def create_plot(self, df):
         # Plotting with normalized counts
-        self.fig = px.bar(self.numeric_change_df, 
+        fig = px.bar(df, 
                           x='Numeric Credit Score Change',
                           y='Average Count',
                           title='Average Distribution of Numeric Credit Score Change'
         )
 
-        return self.fig
-        
+        return fig
