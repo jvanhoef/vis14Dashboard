@@ -48,6 +48,8 @@ class HistogramPlot(html.Div):
         # Convert to DataFrame for Plotly
         numeric_change_df = numeric_change_counts.reset_index()
         numeric_change_df.columns = ['Numeric Credit Score Change', 'Average Count']
+
+        self.numeric_change_df = numeric_change_df
                 
         # Equivalent to `html.Div([...])`
         super().__init__(

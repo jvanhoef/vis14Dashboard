@@ -8,7 +8,7 @@ class SunburstPlot(html.Div):
         df = df.copy()
         ##DATA HANDLING
         #Encoder of credit score
-        custom_encoding = {'Good': 3, 'Standard': 2, 'Poor': 1}
+        custom_encoding = {'Good': 1, 'Standard': 0, 'Poor': -1}
         df['Credit_Score_Numeric'] = df['Credit_Score'].map(custom_encoding)
 
         #Making Agen groups bins
@@ -55,8 +55,8 @@ class SunburstPlot(html.Div):
             data_frame=df_clean,
             path=[personal_slct.replace('_', ' ') + '_new', behavioural_slct.replace('_', ' ') + '_new', 'Credit Score_new'],  # Root, branches, leaves
             color="Credit_Score_Numeric",
-            color_continuous_scale=["red","yellow", "green"],
-            range_color=[1,3],
+            color_continuous_scale=["#0C7BDC","#777777", "#FFC20A"],
+            range_color=[-1,1],
             maxdepth= 2, 
             hover_data=[personal_slct.replace('_', ' ') + '_new', behavioural_slct.replace('_', ' ') + '_new', 'Credit Score_new']  # Add "Credit_Score" to hover_data
         )

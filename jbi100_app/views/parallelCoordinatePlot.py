@@ -50,7 +50,7 @@ class ParallelCoordinatePlot(html.Div):
         
     def update_plot(self, colorblind_friendly):
         # The 3 credit score categories
-        credit_categories = ['Poor', 'Standard', 'Good']
+        credit_categories = ['Good', 'Standard', 'Poor']
         
         color_scale = px.colors.sequential.Cividis if 'CB' in colorblind_friendly else px.colors.diverging.Tealrose
         

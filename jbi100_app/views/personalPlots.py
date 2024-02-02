@@ -36,7 +36,7 @@ class PersonalPlots(html.Div):
         self.behavior = behavior
 
         # Define custom colors for clarity
-        custom_colors = ['#2ca02c', '#d62728'] # Green for Good, Blue for Standard, Red for Poor
+        custom_colors = ['#FFC20A', '#0C7BDC'] # Green for Good, Blue for Standard, Red for Poor
 
         filtered_data = filtered_data[filtered_data[behavior] != "Not available"]
         filtered_data['Good_Standard'] = filtered_data['Credit_Score'].apply(lambda x: 'Good_Standard' if x in ['Good', 'Standard'] else 'Poor')

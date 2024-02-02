@@ -129,12 +129,12 @@ def generate_control_personal():
     return html.Div(
         id="control-card",
         children=[
-            html.Label("Colorblind friendly colors"),
-            dcc.Checklist(
-                id='colorblind-checkbox',
-                options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
-                value=[]
-            ),
+            #html.Label("Colorblind friendly colors"),
+            #dcc.Checklist(
+            #    id='colorblind-checkbox',
+            #    options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
+            #    value=[]
+            #),
             html.Div(
                 id="intro-personal",
                 children="Personal plot selections:",
@@ -247,12 +247,12 @@ def generate_control_info():
     return html.Div(
         id="control-card",
         children=[
-            html.Label("Colorblind friendly colors"),
-            dcc.Checklist(
-                id='colorblind-checkbox',
-                options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
-                value=[]
-            ),
+            #html.Label("Colorblind friendly colors"),
+            #dcc.Checklist(
+            #    id='colorblind-checkbox',
+            #    options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
+            #    value=[]
+            #),
             html.Div(
                 dcc.Link(
                     'Home',
@@ -277,12 +277,12 @@ def generate_control_histogram():
     return html.Div(
         id="control-card",
         children=[
-            html.Label("Colorblind friendly colors"),
-            dcc.Checklist(
-                id='colorblind-checkbox',
-                options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
-                value=[]
-            ),
+            #html.Label("Colorblind friendly colors"),
+            #dcc.Checklist(
+            #    id='colorblind-checkbox',
+            #    options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
+            #    value=[]
+            #),
             html.Div(
                 dcc.Link(
                     'Home',
