@@ -5,6 +5,7 @@ from jbi100_app.views.infoPlots import InfoPlots
 from jbi100_app.views.parallelCoordinatePlot import ParallelCoordinatePlot
 from jbi100_app.views.personalPlots import PersonalPlots
 from jbi100_app.views.sunburstPlot import SunburstPlot
+from jbi100_app.views.histogramPlot import HistogramPlot
 
 import dash
 from dash import html
@@ -63,6 +64,12 @@ if __name__ == '__main__':
     # Info plot
     infoPlots = InfoPlots(
         "Information plots",
+        df
+    )
+
+    # Histogram plot
+    HistogramPlot = HistogramPlot(
+        "Histogram plot",
         df
     )
     
@@ -124,6 +131,15 @@ if __name__ == '__main__':
                     html.H1('Info plots page'),
                     html.P('This is the info plots page, here you can find general information about the distribution of the data'),
                     infoPlots,
+                ]
+            , )
+        elif pathname == '/histogram_plot':
+            return html.Div(
+                id="histogram-plot",
+                children=[
+                    html.H1('Histogram plot page'),
+                    html.P('This is the histogram plot page, here you can find the distribution of the data'),
+                    HistogramPlot,
                 ]
             , )
         else:
@@ -196,6 +212,13 @@ if __name__ == '__main__':
     )
     def update_info_plot(selected_category):
         return infoPlots.update_plot(selected_category)
+    
+    @app.callback(
+        Output(HistogramPlot.html_id, 'figure'),
+        [Input('category-dropdown', 'value')]
+    )
+    def update_histogram_plot():
+        return HistogramPlot.update_plot()
     
     
     app.run_server(debug=False, dev_tools_ui=False, port=8051)
