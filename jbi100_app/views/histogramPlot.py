@@ -3,13 +3,12 @@ import pandas as pd
 import plotly.express as px
 
 class HistogramPlot(html.Div):
-    def _init_(self, name, x_labels, df):
+    def __init__(self, name, df):
         self.html_id = name.lower().replace(" ", "-")
         self.df = df
-        self.x_labels = x_labels
                 
-        # Equivalent to html.Div([...])
-        super()._init_(
+        # Equivalent to `html.Div([...])`
+        super().__init__(
             className="graph_card",
             children=[
                 html.H6(name),
@@ -40,3 +39,4 @@ class HistogramPlot(html.Div):
         )
 
         return self.fig
+        

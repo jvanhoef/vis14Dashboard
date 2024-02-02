@@ -88,7 +88,19 @@ def generate_control_home():
                         'border': '1px solid #000',
                         'display': 'inline-block'
                     }
-                )
+                ),
+                dcc.Link(
+                    'Histogram Plot',
+                    href='/histogram_plot',
+                    refresh=True,
+                    style={
+                        'marginLeft': '10px',
+                        'padding': '10px',
+                        'backgroundColor': '#f0f0f0',
+                        'border': '1px solid #000',
+                        'display': 'inline-block'
+                    }
+                ),
             ], style={'textAlign': 'float-left'})
         ]
     )
@@ -249,5 +261,3 @@ def make_menu_layout(pathname):
         return [generate_description_info(), generate_control_info()]
     else:
         return [generate_description_home(), generate_control_home()]
-
-
