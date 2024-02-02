@@ -55,7 +55,7 @@ class SunburstPlot(html.Div):
             data_frame=df_clean,
             path=[personal_slct.replace('_', ' ') + '_new', behavioural_slct.replace('_', ' ') + '_new', 'Credit Score_new'],  # Root, branches, leaves
             color="Credit_Score_Numeric",
-            color_continuous_scale=["#0C7BDC","#777777", "#FFC20A"],
+            color_continuous_scale=["#94caec", "#dddddd", "#7e2954"],
             range_color=[0,2],
             maxdepth= 2, 
             hover_data=[personal_slct.replace('_', ' ') + '_new', behavioural_slct.replace('_', ' ') + '_new', 'Credit Score_new']  # Add "Credit_Score" to hover_data
