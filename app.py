@@ -185,6 +185,7 @@ if __name__ == '__main__':
     def update_info_plot(selected_category):
         return infoPlots.update_plot(selected_category)
     
+    # Callback for updating the histogram plot
     @app.callback(
         Output(HistogramPlot.html_id, 'figure'),
         [Input('category-dropdown', 'value')]

@@ -50,6 +50,22 @@ def generate_description_info():
         ],
     )
 
+def generate_description_histogram():
+    """
+
+    :return: A Div containing dashboard title & descriptions for the personal plots.
+    """
+    return html.Div(
+        id="description-card-histogram",
+        children=[
+            html.H5("Dashboard options"),
+            html.Div(
+                id="intro-histogram",
+                children="Here you can select your preferences for the style of the histogram.",
+            ),
+        ],
+    )
+
 def generate_control_home():
     """
 
@@ -252,6 +268,36 @@ def generate_control_info():
                 ), style={"textAlign": "float-left"})
         ]
     )
+
+def generate_control_histogram():
+    """
+
+    :return: A Div containing controls for graphs.
+    """
+    return html.Div(
+        id="control-card",
+        children=[
+            html.Label("Colorblind friendly colors"),
+            dcc.Checklist(
+                id='colorblind-checkbox',
+                options=[{'label': 'Use colorblind-friendly color scale', 'value': 'CB'}],
+                value=[]
+            ),
+            html.Div(
+                dcc.Link(
+                    'Home',
+                    href='/',
+                    refresh=True,
+                    style={
+                        'marginRight': '10px',
+                        'padding': '10px',
+                        'backgroundColor': '#f0f0f0',
+                        'border': '1px solid #000',
+                        'display': 'inline-block'
+                    }
+                ), style={"textAlign": "float-left"})
+        ]
+    )
     
 def make_menu_layout(pathname):
     if pathname == '/sunburst_personal':
@@ -259,5 +305,9 @@ def make_menu_layout(pathname):
     
     elif pathname == '/info_plots':
         return [generate_description_info(), generate_control_info()]
+    
+    elif pathname == '/histogram_plot':
+        return [generate_description_histogram(), generate_control_histogram()]
+    
     else:
         return [generate_description_home(), generate_control_home()]
