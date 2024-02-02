@@ -130,15 +130,23 @@ if __name__ == '__main__':
     )
     def update_right_column(pathname):
         if pathname == '/sunburst_personal':
-            return html.Div([
+            return html.Div(
+                id="sunburst-plot",
+                children=[
+                    html.H1('Sunburst and Personal Plots Page'),
+                    #sunburstPlot,
+                ]
+            , style={'width': '50%', 'display': 'inline-block'}),
                 # Replace with the actual content for the sunburst_personal page
-                html.H1('Sunburst and Personal Plots Page'),
-            ])
         elif pathname == '/info_plots':
-            return html.Div([
-                # Replace with the actual content for the info_plots page
-                html.H1('Info Plots Page'),
-            ])
+            return html.Div(
+                id="sunburst-plot",
+                children=[
+                    html.H1('Info plots page'),
+                    html.P('This is the info plots page, here you can find general information about the distribution of the data'),
+                    infoPlots,
+                ]
+            , )
         else:
             return html.Div([
                 parallelCoordinatePlot,

@@ -19,12 +19,24 @@ class InfoPlots(html.Div):
 
         self.df = df
 
+        # Create all plots
+        colors = {'Good': 'green', 'Poor': 'red', 'Standard': 'orange'}
+        income_credit_grouped = self.df.groupby(['IncomeGroup', 'Credit_Score']).size().unstack(fill_value=0)
+        age_credit_grouped = self.df.groupby(['AgeGroup', 'Credit_Score']).size().unstack(fill_value=0)
+        occupation_credit_grouped = self.df.groupby(['Occupation', 'Credit_Score']).size().unstack(fill_value=0)
+
+        income_plot = self.create_plotly_stacked_bar_chart(income_credit_grouped, colors)
+        age_plot = self.create_plotly_stacked_bar_chart(age_credit_grouped, colors)
+        occupation_plot = self.create_plotly_stacked_bar_chart(occupation_credit_grouped, colors)
+
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
             children=[
                 html.H6(name),
-                dcc.Graph(id=self.html_id)
+                dcc.Graph(id=self.html_id + '-income', figure=income_plot),
+                dcc.Graph(id=self.html_id + '-age', figure=age_plot),
+                dcc.Graph(id=self.html_id + '-occupation', figure=occupation_plot)
             ],
         )
     
