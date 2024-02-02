@@ -102,52 +102,73 @@ if __name__ == '__main__':
     )
     
     app.layout = html.Div(
-        #dcc.Location(id='url', refresh=False),
-        id="app-container",
         children=[
-            # Left column
+            dcc.Location(id='url', refresh=False),
             html.Div(
-                id="left-column",
-                className="three columns",
-                children=make_menu_layout()
-            ),
-
-            # Right column
-            html.Div(
-                id="right-column",
-                className="nine columns",
+                id="app-container",
                 children=[
-                    parallelCoordinatePlot,
-                    html.Div([
-                        dcc.Link(
-                            'Sunburst and Personal Plots',
-                            href='/sunburst_personal',
-                            refresh=True,
-                            style={
-                                'marginRight': '10px',
-                                'padding': '10px',
-                                'backgroundColor': '#f0f0f0',
-                                'border': '1px solid #000',
-                                'display': 'inline-block'
-                            }
-                        ),
-                        dcc.Link(
-                            'Info Plots',
-                            href='/info_plots',
-                            refresh=True,
-                            style={
-                                'marginLeft': '10px',
-                                'padding': '10px',
-                                'backgroundColor': '#f0f0f0',
-                                'border': '1px solid #000',
-                                'display': 'inline-block'
-                            }
-                        )
-                    ], style={'textAlign': 'center'})
-                ]
-            )
-        ],
+                    # Left column
+                    html.Div(
+                        id="left-column",
+                        className="three columns",
+                        children=make_menu_layout()
+                    ),
+
+                    # Right column
+                    html.Div(
+                        id="right-column",
+                        className="nine columns",
+                    )
+                ],
+            ),
+        ]
     )
+
+    @app.callback(
+        Output('right-column', 'children'),
+        [Input('url', 'pathname')]
+    )
+    def update_right_column(pathname):
+        if pathname == '/sunburst_personal':
+            return html.Div([
+                # Replace with the actual content for the sunburst_personal page
+                html.H1('Sunburst and Personal Plots Page'),
+            ])
+        elif pathname == '/info_plots':
+            return html.Div([
+                # Replace with the actual content for the info_plots page
+                html.H1('Info Plots Page'),
+            ])
+        else:
+            return html.Div([
+                parallelCoordinatePlot,
+                html.Div([
+                    dcc.Link(
+                        'Sunburst and Personal Plots',
+                        href='/sunburst_personal',
+                        refresh=True,
+                        style={
+                            'marginRight': '10px',
+                            'padding': '10px',
+                            'backgroundColor': '#f0f0f0',
+                            'border': '1px solid #000',
+                            'display': 'inline-block'
+                        }
+                    ),
+                    dcc.Link(
+                        'Info Plots',
+                        href='/info_plots',
+                        refresh=True,
+                        style={
+                            'marginLeft': '10px',
+                            'padding': '10px',
+                            'backgroundColor': '#f0f0f0',
+                            'border': '1px solid #000',
+                            'display': 'inline-block'
+                        }
+                    )
+                ], style={'textAlign': 'center'})
+            ])
     
     #The layout for the sunburst and personal plot page
     def sunburst_and_personal_plots_page():
@@ -177,15 +198,15 @@ if __name__ == '__main__':
             , style={'width': '100%', 'display': 'inline-block'})
         ])
 
-    @app.callback(Output('app-container', 'children'),
-                [Input('url', 'pathname')])
-    def display_page(pathname):
-        if pathname == '/sunburst_personal':
-            return sunburst_and_personal_plots_page()
-        elif pathname == '/info_plots':
-            return info_plots_page()
-        else:
-            return "404 Page Error! Please choose a link"
+    # @app.callback(Output('app-container', 'children'),
+    #             [Input('url', 'pathname')])
+    # def display_page(pathname):
+    #     if pathname == '/sunburst_personal':
+    #         return sunburst_and_personal_plots_page()
+    #     elif pathname == '/info_plots':
+    #         return info_plots_page()
+    #     else:
+    #         return "404 Page Error! Please choose a link"
 
     # Callbacks to set colorblindness checks
     @app.callback(
