@@ -65,7 +65,7 @@ class SunburstPlot(html.Div):
         self.fig.update_traces(sort=False, selector=dict(type='sunburst')) 
 
         ## Layout titles  
-        self.fig.update_layout(title_text = "Sunburst graph of personal groups and behavioral variables selected in the dropdown.",coloraxis_colorbar_title='Credit Score', margin=dict(t=0, l=0, r=0, b=0))
+        self.fig.update_layout(title_text = "Sunburst Graph of Personal Groups and Behavioral Variables",coloraxis_colorbar_title='Credit Score')
 
         return self.fig
     

@@ -21,7 +21,7 @@ class InfoPlots(html.Div):
         self.df = df
 
         # Create all plots
-        colors = {'Good': '#FFC20A', 'Poor': '#0C7BDC', 'Standard': '#777777'}
+        colors = {'Good': '#7e2954', 'Poor': '#94caec', 'Standard': '#dddddd'}
         income_credit_grouped = self.df.groupby(['IncomeGroup', 'Credit_Score']).size().unstack(fill_value=0)
         age_credit_grouped = self.df.groupby(['AgeGroup', 'Credit_Score']).size().unstack(fill_value=0)
         occupation_credit_grouped = self.df.groupby(['Occupation', 'Credit_Score']).size().unstack(fill_value=0)
